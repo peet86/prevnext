@@ -73,30 +73,15 @@ class Widget_Prevnext extends Widgets
 		{
 			$slug = end($this->uri->segments);
 		
-			//Get ID of current post
-			$idquery = $this->db->query("SELECT id FROM default_blog WHERE slug = '$slug' and status = 'live'");
-			$idrow = $idquery->row();
-			$id = isset($idrow->id) ? $idrow->id : 0;
-			
 			//Get previous url
-			$prevurlquery = $this->db->query("SELECT slug, created_on FROM default_blog WHERE id < '$id' and status = 'live' ORDER BY id desc LIMIT 1");
-			$purow = $prevurlquery->row();
+			$purow = $this->db->query("SELECT title, slug, created_on FROM default_blog WHERE id < '$id' and status = 'live' ORDER BY id desc LIMIT 1")->row();
 			$prev_url = isset($purow->slug) ? $this->format_url($purow->slug, $purow->created_on) : '';
-			
-			//Get previous title
-			$prevtitlequery = $this->db->query("SELECT title FROM default_blog WHERE id < '$id' and status = 'live' ORDER BY id desc LIMIT 1");
-			$ptrow = $prevtitlequery->row();
-			$prev_title = isset($ptrow->title) ? $ptrow->title : '';
-			
+			$prev_title = isset($purow->title) ? $purow->title : '';
+
 			//Get next url
-			$nexturlquery = $this->db->query("SELECT slug, created_on FROM default_blog WHERE id > '$id' and status = 'live' ORDER BY id asc LIMIT 1");
-			$nurow = $nexturlquery->row();
+			$nurow = $this->db->query("SELECT title, slug, created_on FROM default_blog WHERE id > '$id' and status = 'live' ORDER BY id asc LIMIT 1")->row();
 			$next_url = isset($nurow->slug) ? $this->format_url($nurow->slug, $nurow->created_on) : '';
-	
-			//Get next title
-			$nexttitlequery = $this->db->query("SELECT title FROM default_blog WHERE id > '$id' and status = 'live' ORDER BY id asc LIMIT 1");
-			$ntrow = $nexttitlequery->row();
-			$next_title = isset($ntrow->title) ? $ntrow->title : '';
+			$next_title = isset($nurow->title) ? $nurow->title : '';
 			
 			return array(
 			'id' => $id,
